@@ -1,0 +1,127 @@
+{
+  "sources": [
+    {
+      "id": "the-daily-broadsheet",
+      "name": "The Daily Broadsheet",
+      "description": "Premium classic journalism reporting with editorial excellence.",
+      "url": "https://example.com",
+      "category": "general",
+      "language": "en",
+      "country": "us"
+    },
+    {
+      "id": "tech-chronicle",
+      "name": "Tech Chronicle",
+      "description": "In-depth investigative reports on the technological frontier.",
+      "url": "https://example.com/tech",
+      "category": "technology",
+      "language": "en",
+      "country": "us"
+    },
+    {
+      "id": "financial-gazette",
+      "name": "Financial Gazette",
+      "description": "Global economic news, stock market updates, and financial reviews.",
+      "url": "https://example.com/business",
+      "category": "business",
+      "language": "en",
+      "country": "gb"
+    }
+  ],
+  "articles": {
+    "general": [
+      {
+        "source": { "id": "the-daily-broadsheet", "name": "The Daily Broadsheet" },
+        "author": "Eleanor Vance",
+        "title": "The Resurgence of Print Aesthetics in the Digital Epoch",
+        "description": "In an era dominated by hyperactive digital distractions, standard news readers are returning to classic layout aesthetics to restore focus and cognitive peace.",
+        "url": "#",
+        "urlToImage": "https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=800&q=80",
+        "publishedAt": "2026-07-07T08:00:00Z",
+        "content": "As modern interfaces grow increasingly noisy, the timeless design of physical print offers a blueprint for structured, thoughtful, and premium layout hierarchies online..."
+      },
+      {
+        "source": { "id": "the-daily-broadsheet", "name": "The Daily Broadsheet" },
+        "author": "Arthur Pendelton",
+        "title": "Global Logistics Adapts to Changing Climate Corridors",
+        "description": "International shipping lanes are adjusting to changing weather patterns, prompting major infrastructural shifts and introducing new shipping schedules.",
+        "url": "#",
+        "urlToImage": "https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?auto=format&fit=crop&w=800&q=80",
+        "publishedAt": "2026-07-07T07:15:00Z",
+        "content": "Port authorities across the globe are reinforcing deep sea docks and investing in smart tracking tools to mitigate container delays, introducing modern efficiency protocols..."
+      }
+    ],
+    "technology": [
+      {
+        "source": { "id": "tech-chronicle", "name": "Tech Chronicle" },
+        "author": "Dr. Marcus Chen",
+        "title": "Quantum Hardware Achieves New Coherence Standard",
+        "description": "Researchers succeed in stabilizing superconducting qubits for record durations, paving the way for next-generation quantum computers.",
+        "url": "#",
+        "urlToImage": "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80",
+        "publishedAt": "2026-07-07T06:40:00Z",
+        "content": "The breakthrough overcomes previous thermal noise barriers, maintaining quantum states intact for nearly triple the duration of standard silicon architectures..."
+      }
+    ],
+    "business": [
+      {
+        "source": { "id": "financial-gazette", "name": "Financial Gazette" },
+        "author": "Sarah Jenkins",
+        "title": "Central Banks Coordinate Policies to Counter Global Inflation",
+        "description": "Major financial institutions announce coordinated interest rate corrections to stabilize global markets and curb consumer price pressures.",
+        "url": "#",
+        "urlToImage": "https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=800&q=80",
+        "publishedAt": "2026-07-07T05:22:00Z",
+        "content": "The surprise joint statement led to immediate gains on treasury yields, stabilizing key indicators ahead of the quarterly economic audits..."
+      }
+    ],
+    "science": [
+      {
+        "source": { "id": "the-daily-broadsheet", "name": "The Daily Broadsheet" },
+        "author": "Prof. Alan Vance",
+        "title": "Deep Space Observations Unveil Ancient Galaxy Clusters",
+        "description": "Orbital space telescopes capture high-definition light signatures originating from the early universe, challenging current models of galaxy evolution.",
+        "url": "#",
+        "urlToImage": "https://images.unsplash.com/photo-1507413245164-6160d8298b31?auto=format&fit=crop&w=800&q=80",
+        "publishedAt": "2026-07-07T04:10:00Z",
+        "content": "The massive red-shifted structures indicate that stars gathered into dense gravity wells much sooner after the cosmic expansion than previously calculated..."
+      }
+    ],
+    "sports": [
+      {
+        "source": { "id": "the-daily-broadsheet", "name": "The Daily Broadsheet" },
+        "author": "James Croft",
+        "title": "Underdog Victory Shakes National Athletics Championships",
+        "description": "An unseeded sprinter captures gold in a record-breaking final, stunning commentators and securing an automatic team roster slot.",
+        "url": "#",
+        "urlToImage": "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=800&q=80",
+        "publishedAt": "2026-07-07T03:00:00Z",
+        "content": "Accelerating past the seasoned field in the final thirty meters, the newcomer finished at an official time that breaks the decade-long national standard..."
+      }
+    ],
+    "entertainment": [
+      {
+        "source": { "id": "the-daily-broadsheet", "name": "The Daily Broadsheet" },
+        "author": "Helena Ross",
+        "title": "Modern Art Retrospective Focuses on Chromatic Saturation",
+        "description": "New municipal exhibit brings together mid-century abstract masterpieces, drawing record attendance through high-impact gallery lighting design.",
+        "url": "#",
+        "urlToImage": "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=800&q=80",
+        "publishedAt": "2026-07-07T02:15:00Z",
+        "content": "The stark gallery halls are flooded with vivid colors, contrasting with white museum columns to construct a premium three-dimensional installation space..."
+      }
+    ],
+    "health": [
+      {
+        "source": { "id": "the-daily-broadsheet", "name": "The Daily Broadsheet" },
+        "author": "Dr. Lydia Sterling",
+        "title": "Circadian Rhythms Directly Influence Neural Cleansing Functions",
+        "description": "New medical studies detail how highly regulated sleep patterns optimize brain toxin removal, reducing long-term cognitive wear.",
+        "url": "#",
+        "urlToImage": "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=800&q=80",
+        "publishedAt": "2026-07-07T01:45:00Z",
+        "content": "The cerebrospinal fluid circulation operates at twice the efficiency during standardized resting windows, underlining the fundamental health values of sleep hygiene..."
+      }
+    ]
+  }
+}

@@ -1,0 +1,345 @@
+/* Custom styles for The Daily Gazette - Premium Pine Blue Broadsheet Theme */
+
+:root {
+    --pine-dark: #122d3e;       /* Deep slate pine blue for headings, primary text, dark buttons */
+    --pine-medium: #1f4e6b;     /* Midtone pine blue for active links, highlights */
+    --pine-light: #5282a1;      /* Light slate pine for highlights, borders */
+    --pine-pale: #e7eff3;       /* Pale ice-blue for backgrounds, selections */
+    --pine-mist: #f0f4f7;       /* Soft ice-blue-gray for footer, side panels */
+    --bg-paper: #fafcff;        /* Crisp, premium paper background with a hint of ice-blue */
+    --text-primary: #122d3e;    /* Primary font color */
+    --text-secondary: #304858;  /* Secondary/body font color */
+    --text-muted: #5e798c;      /* Muted tags and dates metadata */
+    --border-primary: #122d3e;  /* Editorial double lines border */
+    --border-secondary: #c9d6de;/* Soft column separators and card borders */
+}
+
+/* General Elements */
+body {
+    background-color: var(--bg-paper);
+    color: var(--text-secondary);
+    font-family: 'Inter', Helvetica, Arial, sans-serif;
+    line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6, .serif-font {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 700;
+    color: var(--pine-dark);
+}
+
+/* Print Layout Borders & Rules */
+hr {
+    border-color: var(--border-secondary);
+    opacity: 0.85;
+}
+
+.double-rule {
+    border: none;
+    border-top: 4px double var(--pine-dark);
+    margin: 2rem 0;
+    opacity: 1;
+}
+
+.border-end {
+    border-right: 1px solid var(--border-secondary) !important;
+}
+
+/* Header & Masthead */
+.top-bar {
+    border-bottom: 1px solid var(--pine-dark) !important;
+}
+
+.small-meta {
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    color: var(--text-muted);
+}
+
+.masthead-title {
+    font-size: 4.5rem;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    border-bottom: 1px solid var(--pine-dark);
+    padding-bottom: 5px;
+    display: inline-block;
+    width: 100%;
+    color: var(--pine-dark);
+}
+
+@media (max-width: 768px) {
+    .masthead-title {
+        font-size: 2.8rem;
+    }
+}
+
+.masthead-subtitle {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+}
+
+.italic {
+    font-style: italic;
+}
+
+/* Category Navigation */
+.category-nav {
+    border-top: 3px double var(--pine-dark) !important;
+    border-bottom: 3px double var(--pine-dark) !important;
+    background-color: var(--bg-paper);
+}
+
+.nav-item {
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    text-decoration: none;
+    padding: 0.5rem 1.2rem;
+    position: relative;
+    transition: color 0.2s ease;
+}
+
+.nav-item::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 5px;
+    left: 1.2rem;
+    background-color: var(--pine-medium);
+    transition: width 0.25s ease;
+}
+
+.nav-item:hover::after,
+.nav-item.active::after {
+    width: calc(100% - 2.4rem);
+}
+
+.nav-item:hover,
+.nav-item.active {
+    color: var(--pine-dark);
+}
+
+/* Toolbar Config */
+.newspaper-select, .newspaper-search {
+    background-color: #ffffff;
+    border: 1px solid var(--pine-dark);
+    border-radius: 0;
+    color: var(--text-primary);
+    font-size: 0.85rem;
+}
+
+.newspaper-select:focus, .newspaper-search:focus {
+    box-shadow: none;
+    border-color: var(--pine-medium);
+}
+
+.btn-dark {
+    border-radius: 0;
+    background-color: var(--pine-dark);
+    border: 1px solid var(--pine-dark);
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    transition: all 0.2s ease;
+}
+
+.btn-dark:hover {
+    background-color: var(--bg-paper);
+    color: var(--pine-dark);
+}
+
+.btn-outline-dark {
+    border-radius: 0;
+    border: 1px solid var(--pine-dark);
+    color: var(--pine-dark);
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    transition: all 0.2s ease;
+}
+
+.btn-outline-dark:hover {
+    background-color: var(--pine-dark);
+    color: #ffffff;
+}
+
+/* Lead Article Card Styling */
+.lead-article {
+    border: 1px solid var(--pine-dark);
+    background-color: #ffffff;
+    transition: box-shadow 0.3s ease;
+}
+
+.lead-article:hover {
+    box-shadow: 0 4px 15px rgba(18, 45, 62, 0.08);
+}
+
+.lead-image-container {
+    max-height: 420px;
+    overflow: hidden;
+    border-bottom: 1px solid var(--pine-dark);
+    background-color: var(--pine-dark);
+}
+
+.lead-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+    filter: saturate(1.1);
+}
+
+.lead-article:hover .lead-image {
+    transform: scale(1.02);
+}
+
+.lead-title {
+    font-size: 2.4rem;
+    line-height: 1.15;
+    margin-bottom: 0.8rem;
+}
+
+.lead-title a {
+    color: var(--pine-dark);
+    text-decoration: none;
+}
+
+.lead-title a:hover {
+    text-decoration: underline;
+}
+
+.lead-desc {
+    font-size: 1.05rem;
+    color: var(--text-secondary);
+    font-family: Georgia, serif;
+}
+
+/* Standard Article Cards */
+.article-card {
+    border: 1px solid var(--border-secondary);
+    background-color: #ffffff;
+    height: 100%;
+    transition: all 0.3s ease;
+}
+
+.article-card:hover {
+    border-color: var(--pine-dark);
+    box-shadow: 0 4px 15px rgba(18, 45, 62, 0.08);
+}
+
+.card-image-container {
+    height: 190px;
+    overflow: hidden;
+    border-bottom: 1px solid var(--border-secondary);
+    background-color: var(--pine-dark);
+}
+
+.card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+    filter: saturate(1.1);
+}
+
+.article-card:hover .card-image {
+    transform: scale(1.03);
+}
+
+.article-title {
+    font-size: 1.3rem;
+    line-height: 1.25;
+    margin-bottom: 0.6rem;
+}
+
+.article-title a {
+    color: var(--pine-dark);
+    text-decoration: none;
+}
+
+.article-title a:hover {
+    text-decoration: underline;
+}
+
+.article-desc {
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+    font-family: Georgia, serif;
+}
+
+/* Metadata Text styling */
+.meta-text {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+/* Sources Sidebar and Grid */
+.section-title {
+    font-size: 1.3rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--pine-dark);
+}
+
+.newspaper-list .list-group-item {
+    background-color: transparent;
+    border-color: var(--border-secondary);
+    font-size: 0.85rem;
+    padding: 0.6rem 0;
+    color: var(--text-secondary);
+    font-weight: 500;
+    transition: color 0.15s ease;
+    cursor: pointer;
+}
+
+.newspaper-list .list-group-item:hover {
+    color: var(--pine-medium);
+    text-decoration: underline;
+}
+
+.source-card {
+    border: 1px solid var(--pine-dark);
+    background-color: #ffffff;
+    transition: all 0.25s ease;
+    cursor: pointer;
+}
+
+.source-card:hover {
+    background-color: var(--pine-dark);
+    color: #ffffff;
+}
+
+.source-card:hover h4 {
+    color: #ffffff;
+}
+
+.source-card:hover p {
+    color: var(--pine-pale);
+}
+
+/* Custom Alert styling (for offline notice) */
+.alert-custom {
+    background-color: var(--pine-dark);
+    color: #ffffff;
+    border-radius: 0;
+    border: none;
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+}
+
+/* Footer Section */
+.footer {
+    border-top: 1px solid var(--pine-dark) !important;
+    background-color: var(--pine-mist);
+}
+
+.footer-logo {
+    font-size: 1.8rem;
+    font-weight: 900;
+    letter-spacing: 0.05em;
+    color: var(--pine-dark);
+}
