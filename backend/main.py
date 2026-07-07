@@ -161,3 +161,11 @@ async def get_everything(
                 return get_local_everything(source_id)
     except Exception:
         return get_local_everything(source_id)
+
+from fastapi.staticfiles import StaticFiles
+
+# Mount the static frontend files
+static_dir = os.path.join(os.path.dirname(__file__), "static")
+if os.path.exists(static_dir):
+    app.mount("/", StaticFiles(directory=static_dir, html=True), name="static")
+
