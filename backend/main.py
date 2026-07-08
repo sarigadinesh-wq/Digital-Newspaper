@@ -1,6 +1,7 @@
 import os
 import json
 from typing import Optional, List, Dict, Any
+# pyrefly: ignore [missing-import]
 from fastapi import FastAPI, Query, HTTPException, Path
 from fastapi.middleware.cors import CORSMiddleware
 import httpx
@@ -86,6 +87,108 @@ def get_local_everything(source_id: str) -> Dict[str, Any]:
         "is_fallback": True
     }
 
+import asyncio
+from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import StrOutputParser
+
+# LangChain Gemini Elaboration Pipeline Configuration
+LLM_API_KEY = os.getenv("LLM_API_KEY", "")
+LLM_MODEL_NAME = os.getenv("LLM_MODEL_NAME", "gemini-1.5-flash")
+
+llm = None
+if LLM_API_KEY:
+    try:
+        llm = ChatGoogleGenerativeAI(
+            model=LLM_MODEL_NAME,
+            google_api_key=LLM_API_KEY,
+            temperature=0.7
+        )
+        print(f"Successfully initialized ChatGoogleGenerativeAI with model: {LLM_MODEL_NAME}")
+    except Exception as e:
+        print(f"Failed to initialize ChatGoogleGenerativeAI: {e}")
+
+def clean_and_parse_json(text: str) -> Optional[Dict[str, str]]:
+    """Defensive utility to clean code block backticks and parse JSON output."""
+    text = text.strip()
+    if text.startswith("```json"):
+        text = text[7:]
+    elif text.startswith("```"):
+        text = text[3:]
+    if text.endswith("```"):
+        text = text[:-3]
+    text = text.strip()
+    try:
+        return json.loads(text)
+    except Exception:
+        return None
+
+async def elaborate_article(article: Dict[str, Any]) -> Dict[str, Any]:
+    """Sends a single article to Gemini to rephrase/elaborate in premium broadsheet style."""
+    if not llm:
+        return article
+    
+    title = article.get("title", "")
+    description = article.get("description", "")
+    content = article.get("content", "")
+    
+    if not title:
+        return article
+
+    prompt = ChatPromptTemplate.from_template(
+        "You are an expert news editor for \"The Daily Gazette\", a premium digital broadsheet newspaper.\n"
+        "Your task is to rephrase and elaborate on the raw wire news content below to make it sound authoritative, detailed, and written in a classic editorial style.\n\n"
+        "Raw Title: {title}\n"
+        "Raw Description: {description}\n"
+        "Raw Content: {content}\n\n"
+        "You must return a valid JSON object matching this schema. Do not output any markdown formatting, commentary, or extra text. Return ONLY the raw JSON string:\n"
+        "{{\n"
+        "  \"title\": \"Rephrased elegant headline in classic newspaper format\",\n"
+        "  \"description\": \"Elaborated, detailed single-sentence summary of the event\",\n"
+        "  \"content\": \"Elaborated classic print broadsheet article content (2-3 paragraphs, descriptive, high-quality editorial writing)\"\n"
+        "}}"
+    )
+
+    chain = prompt | llm | StrOutputParser()
+
+    try:
+        output = await asyncio.wait_for(
+            chain.ainvoke({"title": title, "description": description or "", "content": content or ""}),
+            timeout=10.0
+        )
+        parsed = clean_and_parse_json(output)
+        if parsed:
+            article_copy = article.copy()
+            article_copy["title"] = parsed.get("title", title)
+            article_copy["description"] = parsed.get("description", description)
+            article_copy["content"] = parsed.get("content", content)
+            return article_copy
+    except Exception as e:
+        print(f"Elaboration failed for article '{title}': {e}")
+        
+    return article
+
+async def elaborate_articles(articles: List[Dict[str, Any]], limit: int = 4) -> List[Dict[str, Any]]:
+    """Runs elaboration in parallel for the top N articles in a feed list."""
+    if not llm or not articles:
+        return articles
+    
+    to_elaborate = articles[:limit]
+    remaining = articles[limit:]
+
+    tasks = [elaborate_article(art) for art in to_elaborate]
+    elaborated = await asyncio.gather(*tasks, return_exceptions=True)
+
+    result = []
+    for i, res in enumerate(elaborated):
+        if isinstance(res, Exception):
+            result.append(to_elaborate[i])
+        else:
+            result.append(res)
+            
+    result.extend(remaining)
+    return result
+
 @app.get("/api/health")
 async def health_check():
     """Simple API health probe."""
@@ -135,11 +238,20 @@ async def get_top_headlines(
             if response.status_code == 200:
                 data = response.json()
                 data["is_fallback"] = False
+                if "articles" in data:
+                    data["articles"] = await elaborate_articles(data["articles"])
                 return data
             else:
-                return get_local_headlines(category)
+                fallback_data = get_local_headlines(category)
+                if "articles" in fallback_data:
+                    fallback_data["articles"] = await elaborate_articles(fallback_data["articles"])
+                return fallback_data
     except Exception:
-        return get_local_headlines(category)
+        fallback_data = get_local_headlines(category)
+        if "articles" in fallback_data:
+            fallback_data["articles"] = await elaborate_articles(fallback_data["articles"])
+        return fallback_data
+
 
 @app.get("/api/everything/{source_id}")
 async def get_everything(
@@ -156,11 +268,20 @@ async def get_everything(
             if response.status_code == 200:
                 data = response.json()
                 data["is_fallback"] = False
+                if "articles" in data:
+                    data["articles"] = await elaborate_articles(data["articles"])
                 return data
             else:
-                return get_local_everything(source_id)
+                fallback_data = get_local_everything(source_id)
+                if "articles" in fallback_data:
+                    fallback_data["articles"] = await elaborate_articles(fallback_data["articles"])
+                return fallback_data
     except Exception:
-        return get_local_everything(source_id)
+        fallback_data = get_local_everything(source_id)
+        if "articles" in fallback_data:
+            fallback_data["articles"] = await elaborate_articles(fallback_data["articles"])
+        return fallback_data
+
 
 from fastapi.staticfiles import StaticFiles
 

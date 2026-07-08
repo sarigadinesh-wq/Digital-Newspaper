@@ -3,3 +3,5 @@ uvicorn>=0.22.0
 httpx>=0.24.0
 python-dotenv>=1.0.0
 aiofiles>=23.0.0
+langchain>=0.1.0
+langchain-google-genai>=1.0.0

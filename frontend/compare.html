@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Newspaper - Content Pipeline Comparison</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        body {
+            background-color: #f4f6f8;
+            font-family: 'Inter', sans-serif;
+            color: #1a364a;
+            padding: 2rem 0;
+        }
+        
+        h1, h2, h3, h4 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-weight: 700;
+        }
+
+        .header-panel {
+            background-color: #122d3e;
+            color: #ffffff;
+            padding: 2rem;
+            border-bottom: 4px solid #1f4e6b;
+            margin-bottom: 2rem;
+        }
+
+        .header-panel h1 {
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+        }
+
+        .comparison-container {
+            background-color: #ffffff;
+            border: 1px solid #c9d6de;
+            border-radius: 0;
+            box-shadow: 0 4px 15px rgba(18, 45, 62, 0.05);
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .comparison-header {
+            background-color: #f8fafc;
+            border-bottom: 1px solid #c9d6de;
+            padding: 1rem 1.5rem;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .feed-column {
+            padding: 1.5rem;
+        }
+
+        .raw-feed {
+            background-color: #fdfdfd;
+            border-right: 1px solid #e9ecef;
+        }
+
+        .llm-feed {
+            background-color: #fcfdfe;
+        }
+
+        .article-title {
+            font-size: 1.25rem;
+            color: #122d3e;
+            margin-bottom: 0.75rem;
+        }
+
+        .article-meta {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #5e798c;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .article-text {
+            font-size: 0.9rem;
+            color: #304858;
+            line-height: 1.6;
+        }
+
+        .highlight-badge {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            font-weight: bold;
+            padding: 0.2rem 0.5rem;
+            border-radius: 3px;
+        }
+
+        .badge-raw {
+            background-color: #e9ecef;
+            color: #495057;
+        }
+
+        .badge-llm {
+            background-color: #d1e7dd;
+            color: #0f5132;
+        }
+
+        .btn-newspaper {
+            background-color: #122d3e;
+            color: #ffffff;
+            border: 1px solid #122d3e;
+            border-radius: 0;
+            font-weight: bold;
+            letter-spacing: 0.05em;
+            transition: all 0.2s ease;
+        }
+
+        .btn-newspaper:hover {
+            background-color: #ffffff;
+            color: #122d3e;
+        }
+
+        .status-alert {
+            border-radius: 0;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Main Header -->
+        <div class="header-panel text-center">
+            <h1>Content Pipeline Cross-Validation</h1>
+            <p class="lead mb-0">Comparing raw feeds from the News API base URL vs. rephrased and elaborated articles from the Gemini LLM pipeline.</p>
+        </div>
+
+        <!-- Controls -->
+        <div class="row mb-4">
+            <div class="col-md-8 d-flex gap-3 align-items-center">
+                <button id="fetch-btn" class="btn btn-newspaper text-uppercase px-4 py-2">Compare Feeds</button>
+                <div id="status-message" class="text-muted small">Ready to compare. Click button to load.</div>
+            </div>
+        </div>
+
+        <!-- Comparison List -->
+        <div id="comparison-list">
+            <!-- Dynamic comparison items go here -->
+            <div class="text-center py-5 text-muted italic">
+                <p>Click "Compare Feeds" to fetch and align articles side-by-side.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        document.getElementById("fetch-btn").addEventListener("click", async () => {
+            const statusMsg = document.getElementById("status-message");
+            const listContainer = document.getElementById("comparison-list");
+            
+            statusMsg.textContent = "Fetching feeds from public API and local container...";
+            listContainer.innerHTML = `
+                <div class="text-center py-5">
+                    <div class="spinner-border text-dark" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="italic text-muted mt-3">Loading teletype dispatches...</p>
+                </div>
+            `;
+
+            try {
+                // 1. Fetch raw articles from public endpoint
+                const rawRes = await fetch("https://saurav.tech/NewsAPI/top-headlines/category/general/us.json");
+                const rawData = await rawRes.json();
+                const rawArticles = rawData.articles || [];
+
+                // 2. Fetch processed/elaborated articles from local backend API
+                const localRes = await fetch("/api/top-headlines?category=general&country=us");
+                const localData = await localRes.json();
+                const localArticles = localData.articles || [];
+
+                statusMsg.textContent = `Load complete. Raw: ${rawArticles.length} items, Local: ${localArticles.length} items.`;
+                listContainer.innerHTML = "";
+
+                if (localData.is_fallback) {
+                    listContainer.innerHTML += `
+                        <div class="alert alert-warning status-alert mb-4 text-center">
+                            <strong>Notice:</strong> Local container backend returned <strong>offline fallback data</strong>. Comparing fallback dataset.
+                        </div>
+                    `;
+                }
+
+                // Match and align articles
+                // The backend processes the first N articles. We will compare indices side by side.
+                const compareCount = Math.min(rawArticles.length, localArticles.length, 6);
+                
+                for (let i = 0; i < compareCount; i++) {
+                    const rawArt = rawArticles[i];
+                    const localArt = localArticles[i];
+
+                    const item = document.createElement("div");
+                    item.className = "comparison-container";
+                    item.innerHTML = `
+                        <div class="comparison-header d-flex justify-content-between align-items-center">
+                            <span>Dispatch comparison #${i + 1}</span>
+                            <span class="text-muted small">Source: ${rawArt.source?.name || "News Agency"}</span>
+                        </div>
+                        <div class="row g-0">
+                            <!-- Raw Feed -->
+                            <div class="col-md-6 feed-column raw-feed">
+                                <div class="mb-3">
+                                    <span class="highlight-badge badge-raw">Raw content (News API)</span>
+                                </div>
+                                <div class="article-meta">Title</div>
+                                <h4 class="article-title">${rawArt.title || "(No Title)"}</h4>
+                                <div class="article-meta">Description</div>
+                                <p class="article-text fw-semibold mb-3">${rawArt.description || "(No Description)"}</p>
+                                <div class="article-meta">Content Snippet</div>
+                                <p class="article-text text-muted">${rawArt.content || "(No Content)"}</p>
+                            </div>
+                            
+                            <!-- Processed/LLM Feed -->
+                            <div class="col-md-6 feed-column llm-feed">
+                                <div class="mb-3">
+                                    <span class="highlight-badge badge-llm">AI Processed (LLM API)</span>
+                                </div>
+                                <div class="article-meta">Title</div>
+                                <h4 class="article-title text-primary">${localArt.title || "(No Title)"}</h4>
+                                <div class="article-meta">Description</div>
+                                <p class="article-text fw-semibold text-primary mb-3">${localArt.description || "(No Description)"}</p>
+                                <div class="article-meta">Elaborated Content</div>
+                                <p class="article-text text-dark">${localArt.content || "(No Content)"}</p>
+                            </div>
+                        </div>
+                    `;
+                    listContainer.appendChild(item);
+                }
+            } catch (err) {
+                console.error("Comparison load failure:", err);
+                statusMsg.textContent = "Failure to retrieve news feeds.";
+                listContainer.innerHTML = `
+                    <div class="alert alert-danger status-alert text-center">
+                        Failed to fetch data streams. Ensure your Docker container is running and accessible on port 80.
+                    </div>
+                `;
+            }
+        });
+    </script>
+</body>
+</html>
