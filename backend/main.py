@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 NEWS_API_BASE_URL = os.getenv("NEWS_API_BASE_URL", "https://saurav.tech/NewsAPI").rstrip("/")
-API_KEY = os.getenv("API_KEY", "")
+NEWS_API_KEY = os.getenv("NEWS_API_KEY", "")
 
 app = FastAPI(
     title="Digital Newspaper Backend API",
@@ -200,9 +200,13 @@ async def get_sources():
     Fetch list of news sources from the external API.
     If external API is unreachable, return local fallback sources.
     """
-    url = f"{NEWS_API_BASE_URL}/sources.json"
+    if "newsapi.org" in NEWS_API_BASE_URL:
+        url = f"{NEWS_API_BASE_URL}/top-headlines/sources"
+    else:
+        url = f"{NEWS_API_BASE_URL}/sources.json"
+        
     try:
-        async with httpx.AsyncClient(timeout=5.0) as client:
+        async with httpx.AsyncClient(timeout=5.0, headers={"X-Api-Key": NEWS_API_KEY}) as client:
             response = await client.get(url)
             if response.status_code == 200:
                 data = response.json()
@@ -231,9 +235,13 @@ async def get_top_headlines(
     if category not in valid_categories:
         category = "general"
 
-    url = f"{NEWS_API_BASE_URL}/top-headlines/category/{category}/{country}.json"
+    if "newsapi.org" in NEWS_API_BASE_URL:
+        url = f"{NEWS_API_BASE_URL}/top-headlines?category={category}&country={country}"
+    else:
+        url = f"{NEWS_API_BASE_URL}/top-headlines/category/{category}/{country}.json"
+        
     try:
-        async with httpx.AsyncClient(timeout=5.0) as client:
+        async with httpx.AsyncClient(timeout=5.0, headers={"X-Api-Key": NEWS_API_KEY}) as client:
             response = await client.get(url)
             if response.status_code == 200:
                 data = response.json()
@@ -261,9 +269,13 @@ async def get_everything(
     Fetch all articles published by a specific news source.
     If external API fails or is unreachable, returns local fallback source articles.
     """
-    url = f"{NEWS_API_BASE_URL}/everything/{source_id}.json"
+    if "newsapi.org" in NEWS_API_BASE_URL:
+        url = f"{NEWS_API_BASE_URL}/everything?sources={source_id}"
+    else:
+        url = f"{NEWS_API_BASE_URL}/everything/{source_id}.json"
+        
     try:
-        async with httpx.AsyncClient(timeout=5.0) as client:
+        async with httpx.AsyncClient(timeout=5.0, headers={"X-Api-Key": NEWS_API_KEY}) as client:
             response = await client.get(url)
             if response.status_code == 200:
                 data = response.json()
